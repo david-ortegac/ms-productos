@@ -25,6 +25,6 @@ public class ProductsJPA implements Serializable {
     private Double price;
 
     @Column(name = "amount")
-    private int amount;
+    private Integer amount;
 
 }

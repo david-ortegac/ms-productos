@@ -50,7 +50,7 @@ public class ProductsRepositoryJPAImp implements ProductsRepositoryDomain {
         if (price!=null && price > 0) {
             spec.add(new SearchStatement("price", price, SearchOperation.EQUAL));
         }
-        if (price!=null && amount > 0) {
+        if (amount > 0) {
             spec.add(new SearchStatement("amount", amount, SearchOperation.EQUAL));
         }
 

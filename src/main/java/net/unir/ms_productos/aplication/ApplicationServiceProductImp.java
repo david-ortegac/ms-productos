@@ -5,18 +5,15 @@ import net.unir.ms_productos.adapter.restful.v1.mappers.AdapterProductsMapper;
 import net.unir.ms_productos.adapter.restful.v1.models.ProductsAdapterDTO;
 import net.unir.ms_productos.domain.ProductsRepositoryDomain;
 import net.unir.ms_productos.domain.entities.ProductsDomainDTO;
-import org.hibernate.exception.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @Slf4j
-public class ApplicationServiceProductImp implements ApplicationServiceProduct {
+class ApplicationServiceProductImp implements ApplicationServiceProduct {
 
     @Autowired
     private ProductsRepositoryDomain repositoryDomain;
@@ -31,7 +28,10 @@ public class ApplicationServiceProductImp implements ApplicationServiceProduct {
 
     @Override
     public List<ProductsAdapterDTO> getAll(String name, String description, int amount, Double price) {
-        if (StringUtils.hasLength(name) || StringUtils.hasLength(description) || amount > 0 || price > 0) {
+        if (StringUtils.hasLength(name)
+                || StringUtils.hasLength(description)
+                || amount > 0
+                || null!=price && price > 0) {
             return mapper.fromDomainToAdapterList(repositoryDomain.search(name, description, amount, price));
         }
         return mapper.fromDomainToAdapterList(repositoryDomain.getAll());
@@ -50,31 +50,20 @@ public class ApplicationServiceProductImp implements ApplicationServiceProduct {
     public ProductsDomainDTO updateProvider(Long id, ProductsAdapterDTO adapterDTO) {
         ProductsDomainDTO product = this.getProvidersById(id);
         adapterDTO.setId(id);
-        if (adapterDTO.getName() != product.name) {
-            adapterDTO.setName(product.getName());
-        } else {
-            adapterDTO.setName(adapterDTO.getName());
+        if (null!=adapterDTO.getName()) {
+            product.setName(adapterDTO.getName());
+        }
+        if (null!=adapterDTO.getDescription()) {
+            product.setDescription(adapterDTO.getDescription());
+        }
+        if (null!=adapterDTO.getAmount()) {
+            product.setAmount(adapterDTO.getAmount());
+        }
+        if (null!=adapterDTO.getPrice()) {
+            product.setPrice(adapterDTO.getPrice());
         }
 
-        if (adapterDTO.getDescription() != product.description) {
-            adapterDTO.setDescription(product.getDescription());
-        } else {
-            adapterDTO.setDescription(adapterDTO.getDescription());
-        }
-
-        if (adapterDTO.getPrice() != product.price) {
-            adapterDTO.setAmount(product.getAmount());
-        } else {
-            adapterDTO.setAmount(adapterDTO.getAmount());
-        }
-
-        if (adapterDTO.getAmount() != product.amount) {
-            adapterDTO.setPrice(product.getPrice());
-        } else {
-            adapterDTO.setPrice(adapterDTO.getPrice());
-        }
-
-        return repositoryDomain.save(mapper.fromAdapterToDomain(adapterDTO));
+        return repositoryDomain.save(mapper.fromAdapterToDomain(mapper.fromDomainToAdapter(product)));
     }
 
     @Override

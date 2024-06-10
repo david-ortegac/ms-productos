@@ -1,7 +1,6 @@
 package net.unir.ms_productos.adapter.restful.v1.rest;
 
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 import net.unir.ms_productos.adapter.restful.v1.mappers.AdapterProductsMapper;
 import net.unir.ms_productos.adapter.restful.v1.models.ProductsAdapterDTO;
 import net.unir.ms_productos.aplication.ApplicationServiceProduct;
@@ -11,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/productos")
@@ -24,7 +22,7 @@ public class RestfulAdapterProviders {
     private ApplicationServiceProduct serviceProviders;
 
     @GetMapping
-    public ResponseEntity<List<ProductsAdapterDTO>> getAllProviders(@Valid @RequestBody ProductsAdapterDTO searchParams) {
+    public ResponseEntity<List<ProductsAdapterDTO>> getAllProviders(@Valid ProductsAdapterDTO searchParams) {
         return new ResponseEntity<>(mapper.fromDomainToAdapterList(mapper.fromAdapterToDomainList(serviceProviders.getAll(
                 searchParams.getName(), searchParams.getDescription(), searchParams.getAmount(), searchParams.getPrice()
         ))), HttpStatus.OK);
