@@ -9,7 +9,7 @@ import java.util.List;
 public interface ApplicationServiceProduct {
     ProductsDomainDTO getProvidersById(Long id);
     List<ProductsAdapterDTO> getAll(String name, String description, int amount, Double price);
-    ProductsDomainDTO saveProvider(ProductsAdapterDTO adapterDTO);
+    ProductsDomainDTO saveProvider(ProductsAdapterDTO adapterDTO) throws Exception;
     ProductsDomainDTO updateProvider(Long id, ProductsAdapterDTO adapterDTO);
     ProductsDomainDTO deleteProvider(Long id);
 }

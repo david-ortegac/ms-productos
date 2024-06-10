@@ -5,11 +5,14 @@ import net.unir.ms_productos.adapter.restful.v1.mappers.AdapterProductsMapper;
 import net.unir.ms_productos.adapter.restful.v1.models.ProductsAdapterDTO;
 import net.unir.ms_productos.domain.ProductsRepositoryDomain;
 import net.unir.ms_productos.domain.entities.ProductsDomainDTO;
+import org.hibernate.exception.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -35,12 +38,42 @@ public class ApplicationServiceProductImp implements ApplicationServiceProduct {
     }
 
     @Override
-    public ProductsDomainDTO saveProvider(ProductsAdapterDTO adapterDTO) {
-        return repositoryDomain.save(mapper.fromAdapterToDomain(adapterDTO));
+    public ProductsDomainDTO saveProvider(ProductsAdapterDTO adapterDTO) throws Exception {
+        if (StringUtils.hasLength(adapterDTO.getName()) && StringUtils.hasLength(adapterDTO.getDescription()) && adapterDTO.getAmount() > 0 && adapterDTO.getPrice() > 0) {
+            return repositoryDomain.save(mapper.fromAdapterToDomain(adapterDTO));
+        } else {
+            throw new Exception("Error al guardar el producto");
+        }
     }
 
     @Override
     public ProductsDomainDTO updateProvider(Long id, ProductsAdapterDTO adapterDTO) {
+        ProductsDomainDTO product = this.getProvidersById(id);
+        adapterDTO.setId(id);
+        if (adapterDTO.getName() != product.name) {
+            adapterDTO.setName(product.getName());
+        } else {
+            adapterDTO.setName(adapterDTO.getName());
+        }
+
+        if (adapterDTO.getDescription() != product.description) {
+            adapterDTO.setDescription(product.getDescription());
+        } else {
+            adapterDTO.setDescription(adapterDTO.getDescription());
+        }
+
+        if (adapterDTO.getPrice() != product.price) {
+            adapterDTO.setAmount(product.getAmount());
+        } else {
+            adapterDTO.setAmount(adapterDTO.getAmount());
+        }
+
+        if (adapterDTO.getAmount() != product.amount) {
+            adapterDTO.setPrice(product.getPrice());
+        } else {
+            adapterDTO.setPrice(adapterDTO.getPrice());
+        }
+
         return repositoryDomain.save(mapper.fromAdapterToDomain(adapterDTO));
     }
 
