@@ -40,7 +40,7 @@ public class RestfulAdapterProviders {
 
     @PutMapping("/{id}")
     @PatchMapping("/{id}")
-    public ResponseEntity<ProductsAdapterDTO> save(@Valid @PathVariable Long id, @Valid @RequestBody ProductsAdapterDTO adapterDTO){
+    public ResponseEntity<ProductsAdapterDTO> update(@Valid @PathVariable Long id, @Valid @RequestBody ProductsAdapterDTO adapterDTO){
         return new ResponseEntity<>(mapper.fromDomainToAdapter(serviceProviders.updateProvider(id, adapterDTO)), HttpStatus.OK);
     }
 
